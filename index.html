@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MVVM Donation Receipt Generator</title>
+<style>
+:root{--purple:#713b78;--pink:#a83286;--ink:#29252d;--line:#d8d1da;--pale:#f7f2f8}
+*{box-sizing:border-box}body{margin:0;background:#f3f1f5;color:var(--ink);font:15px/1.45 Arial,"Noto Sans Tamil",sans-serif}
+header{background:linear-gradient(120deg,#60336f,#8d4383);color:#fff;padding:22px 4vw}header h1{font-size:clamp(20px,3vw,28px);margin:0 0 5px}header p{margin:0;opacity:.95}
+main{max-width:1440px;margin:24px auto;padding:0 18px;display:grid;grid-template-columns:minmax(300px,420px) minmax(0,1fr);gap:22px;align-items:start}
+.panel,.preview-wrap{background:#fff;border:1px solid #e4dfe7;border-radius:14px;box-shadow:0 5px 22px #3120390b}.panel{padding:20px;position:sticky;top:14px;max-height:calc(100vh - 28px);overflow:auto}
+h2{font-size:17px;color:var(--purple);margin:0 0 14px}.section{font-weight:700;color:var(--purple);border-bottom:1px solid #eee6ef;padding:13px 0 7px;margin-top:4px}
+.field{margin:11px 0}.field label{display:block;font-size:13px;font-weight:650;margin-bottom:5px}
+input,textarea,select{width:100%;border:1px solid #d8d1da;border-radius:8px;padding:10px 11px;font:inherit;background:#fff;color:#29252d}textarea{min-height:65px;resize:vertical}input:focus,textarea:focus,select:focus{outline:2px solid #c9a7d0;border-color:var(--purple)}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}.actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}
+button{border:0;border-radius:8px;padding:10px 14px;font-weight:700;cursor:pointer;background:var(--purple);color:#fff}button.secondary{background:#eee7f0;color:#57305e}button.danger{background:#fff0f0;color:#a33}
+.hint{font-size:12px;color:#777;margin:10px 0}.preview-wrap{padding:18px;overflow:auto}.preview-toolbar{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:12px;flex-wrap:wrap}.preview-toolbar strong{color:var(--purple)}
+.receipt{width:100%;max-width:850px;margin:auto;background:#fff;border:1px solid #ddd;padding:24px 26px;color:#28242a}
+.brand{display:grid;grid-template-columns:90px 1fr 140px;gap:14px;align-items:center;padding-bottom:15px;border-bottom:4px solid var(--pink)}
+.logo{width:82px;height:82px;border:3px solid var(--purple);border-radius:50%;display:flex;align-items:center;justify-content:center;color:var(--purple);font-size:19px;font-weight:900;letter-spacing:-1px}
+.brand-tamil{font-size:17px;color:var(--purple);font-weight:700;line-height:1.4}.brand-en{font-size:12px;color:var(--purple);font-weight:750;line-height:1.3}.tagline{font-size:11px;color:#777}
+.doc-title{text-align:right;color:var(--purple);font-weight:800;font-size:18px}.doc-title span{display:block;font-size:15px}
+.meta{display:grid;grid-template-columns:1fr 1fr;margin-top:17px;background:#f8f4f9;border:1px solid var(--line)}.meta>div{padding:10px;border-right:1px solid var(--line);display:grid;grid-template-columns:1fr 1fr;gap:8px;align-items:center}.meta>div:last-child{border:0}
+.meta b,.cell b{font-size:12px;display:block}.ta{font-size:15px;font-weight:650}.value{border-bottom:1px solid #999;min-height:26px;padding:3px 2px;overflow-wrap:anywhere}
+.block-title{font-weight:800;color:var(--purple);font-size:13px;margin:13px 0 5px}.cells{display:grid;grid-template-columns:1fr 1fr;border:1px solid var(--line)}
+.cell{padding:10px;border-right:1px solid var(--line);border-bottom:1px solid var(--line);min-height:72px}.cell:nth-child(2n){border-right:0}.cell.full{grid-column:1/-1;border-right:0}.cell .ta{font-size:15px;line-height:1.35;margin:2px 0 6px}.cell .value{min-height:24px}.sub{font-size:11px;color:#888}
+.thanks{text-align:center;color:var(--purple);font-weight:750;margin:15px 0 20px}.signatures{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;text-align:center}.sign{padding-top:28px}.signline{border-top:1px solid #999;padding-top:6px;color:var(--purple);font-weight:750}.sign strong{display:block;font-size:13px}.sign small{color:#888;font-size:10px}
+.history{border-top:1px solid #eee;margin-top:16px;padding-top:12px}.history-item{display:flex;justify-content:space-between;gap:8px;align-items:center;padding:7px 0;border-bottom:1px solid #eee;font-size:13px}
+@media(max-width:950px){main{grid-template-columns:1fr}.panel{position:static;max-height:none}.receipt{min-width:600px}.preview-wrap{overflow-x:auto}}
+@media print{body{background:#fff}.no-print,header,main>.panel,.preview-toolbar{display:none!important}main{display:block;margin:0;padding:0;max-width:none}.preview-wrap{border:0;padding:0;box-shadow:none}.receipt{max-width:none;width:100%;border:0;padding:10mm 9mm;min-height:275mm}.brand{grid-template-columns:75px 1fr 125px}.logo{width:68px;height:68px}@page{size:A4;margin:8mm}}
+</style>
+</head>
+<body>
+<header><h1>MVVM Donation Receipt Generator</h1><p>வெளிநாடு & வெளியூர் வாழ் மாடத்தட்டுவிளை பங்கு இறைமக்கள் கூட்டமைப்பு · One Team, One Dream</p></header>
+<main>
+<section class="panel no-print">
+<h2>Receipt Details / ரசீது விவரங்கள்</h2>
+<div class="grid2"><div class="field"><label>Receipt No. / ரசீது எண்</label><input id="receiptNo" placeholder="MVVM-001"></div><div class="field"><label>Date / தேதி</label><input id="date" type="date"></div></div>
+<div class="section">Donor Details / நன்கொடையாளர் விவரங்கள்</div>
+<div class="field"><label>Received with thanks from / நன்கொடை வழங்கியவர்</label><input id="donor" placeholder="Donor name"></div>
+<div class="grid2"><div class="field"><label>Contact Number / தொடர்பு எண்</label><input id="phone" inputmode="tel"></div><div class="field"><label>Address / Place / முகவரி / ஊர்</label><input id="address"></div></div>
+<div class="field"><label>Donor Reference (if any) / நன்கொடையாளர் குறிப்பு</label><input id="reference"></div>
+<div class="section">Donation Details / நன்கொடை விவரங்கள்</div>
+<div class="grid2"><div class="field"><label>Amount (₹) / பெறப்பட்ட தொகை</label><input id="amount" type="number" min="0" step="0.01" placeholder="0.00"></div><div class="field"><label>Amount in Words / தொகை எழுத்தில்</label><input id="words" placeholder="Auto-generated; editable"></div></div>
+<div class="field"><label>Donation Towards / Purpose / நன்கொடை வழங்கும் நோக்கம்</label><input id="purpose"></div>
+<div class="grid2"><div class="field"><label>Payment Mode / பணம் செலுத்திய முறை</label><select id="mode"><option value="">Select mode</option><option>Cash / ரொக்கம்</option><option>Bank Transfer / வங்கி பரிமாற்றம்</option><option>UPI</option></select></div><div class="field"><label>Transaction Reference / பரிவர்த்தனை எண்</label><input id="transaction"></div></div>
+<div class="field"><label>Remarks / குறிப்புகள்</label><textarea id="remarks"></textarea></div>
+<div class="actions"><button id="printBtn">Print / Save PDF</button><button class="secondary" id="saveBtn">Save Receipt</button><button class="secondary" id="newBtn">New / Clear</button></div>
+<p class="hint">Receipts are saved only in this browser on this device. Use Print → Save as PDF to export.</p>
+<div class="history"><b>Saved Receipt History</b><div id="historyList"></div><button class="danger" id="clearHistory" style="margin-top:10px">Clear History</button></div>
+</section>
+<section class="preview-wrap">
+<div class="preview-toolbar no-print"><strong>Live Preview / நேரடி முன்னோட்டம்</strong><span class="hint">A4 printable receipt</span></div>
+<article class="receipt" id="receipt">
+<div class="brand"><div class="logo">MVVM</div><div><div class="brand-tamil">வெளிநாடு & வெளியூர் வாழ்<br>மாடத்தட்டுவிளை பங்கு இறைமக்கள்<br>கூட்டமைப்பு (MVVM)</div><div class="brand-en">MADATHTATTUVILAI PARISH OVERSEAS &<br>OUTSTATION PEOPLE’S ASSOCIATION</div><div class="tagline">One Team, One Dream</div></div><div class="doc-title">DONATION<br>RECEIPT<span>நன்கொடை ரசீது</span></div></div>
+<div class="meta"><div><div><b>Receipt No.</b><span class="ta">ரசீது எண்</span></div><div class="value" data-out="receiptNo"></div></div><div><div><b>Date</b><span class="ta">தேதி</span></div><div class="value" data-out="date"></div></div></div>
+<div class="block-title">DONOR DETAILS / நன்கொடையாளர் விவரங்கள்</div>
+<div class="cells">
+<div class="cell"><b>Received with thanks from</b><div class="ta">நன்கொடை வழங்கியவர்</div><div class="value" data-out="donor"></div></div><div class="cell"><b>Contact Number</b><div class="ta">தொடர்பு எண்</div><div class="value" data-out="phone"></div></div>
+<div class="cell"><b>Address / Place</b><div class="ta">முகவரி / ஊர்</div><div class="value" data-out="address"></div></div><div class="cell"><b>Donor Reference (if any)</b><div class="ta">நன்கொடையாளர் குறிப்பு (இருந்தால்)</div><div class="value" data-out="reference"></div></div>
+</div>
+<div class="block-title">DONATION DETAILS / நன்கொடை விவரங்கள்</div>
+<div class="cells">
+<div class="cell"><b>Amount Received (in figures)</b><div class="ta">பெறப்பட்ட தொகை (எண்களில்)</div><div class="value">₹ <span data-out="amount"></span></div></div><div class="cell"><b>Amount in Words</b><div class="ta">தொகை எழுத்தில்</div><div class="value" data-out="words"></div></div>
+<div class="cell"><b>Donation Towards / Purpose</b><div class="ta">நன்கொடை வழங்கும் நோக்கம்</div><div class="value" data-out="purpose"></div></div><div class="cell"><b>Payment Mode</b><div class="ta">பணம் செலுத்திய முறை</div><div class="value" data-out="mode"></div><div class="sub">Cash / ரொக்கம் | Bank Transfer / வங்கி பரிமாற்றம் | UPI</div></div>
+<div class="cell full"><b>Transaction Reference (for bank transfer / UPI)</b><div class="ta">வங்கி பரிமாற்றம் / UPI பரிவர்த்தனை எண்</div><div class="value" data-out="transaction"></div></div><div class="cell full"><b>Remarks</b><div class="ta">குறிப்புகள்</div><div class="value" data-out="remarks"></div></div>
+</div>
+<div class="thanks">Thank you for your generous contribution.<br>தங்களின் மதிப்புமிக்க நன்கொடைக்கு மனமார்ந்த நன்றி.</div>
+<div class="signatures"><div class="sign"><div class="signline">பொருளாளர்<br><strong>Treasurer</strong><small>Authorized Signature</small></div></div><div class="sign"><div class="signline">தலைவர்<br><strong>Chairman</strong><small>Authorized Signature</small></div></div><div class="sign"><div class="signline">செயலாளர்<br><strong>Secretary</strong><small>Authorized Signature</small></div></div></div>
+</article>
+</section>
+</main>
+<script>
+const ids=['receiptNo','date','donor','phone','address','reference','amount','words','purpose','mode','transaction','remarks'];const $=id=>document.getElementById(id);
+function numberWords(n){const a=['','One','Two','Three','Four','Five','Six','Seven','Eight','Nine','Ten','Eleven','Twelve','Thirteen','Fourteen','Fifteen','Sixteen','Seventeen','Eighteen','Nineteen'],b=['','','Twenty','Thirty','Forty','Fifty','Sixty','Seventy','Eighty','Ninety'];function under(x){if(x<20)return a[x];if(x<100)return b[Math.floor(x/10)]+(x%10?' '+a[x%10]:'');return a[Math.floor(x/100)]+' Hundred'+(x%100?' '+under(x%100):'')}if(!Number.isFinite(n)||n<0||n>999999999999)return '';if(n===0)return 'Zero Rupees Only';let x=Math.floor(n),p=[];for(const [v,s] of [[10000000,'Crore'],[100000,'Lakh'],[1000,'Thousand'],[1,'']])if(x>=v){let q=Math.floor(x/v);p.push(under(q)+(s?' '+s:''));x%=v}let pa=Math.round((n-Math.floor(n))*100);return p.join(' ')+' Rupees'+(pa?' and '+under(pa)+' Paise':'')+' Only'}
+function update(){ids.forEach(id=>document.querySelectorAll('[data-out="'+id+'"]').forEach(e=>{let v=$(id).value||'';if(id==='date'&&v){let [y,m,d]=v.split('-');v=d+'/'+m+'/'+y}if(id==='amount'&&v)v=Number(v).toLocaleString('en-IN',{minimumFractionDigits:2,maximumFractionDigits:2});e.textContent=v}))}
+ids.forEach(id=>$(id).addEventListener('input',()=>{if(id==='amount'&&!$('words').dataset.edited)$('words').value=$('amount').value?numberWords(Number($('amount').value)):'';update()}));$('words').addEventListener('input',()=>{$('words').dataset.edited='1';update()});$('amount').addEventListener('input',()=>{$('words').dataset.edited='';});
+$('printBtn').onclick=()=>window.print();function values(){return Object.fromEntries(ids.map(id=>[id,$(id).value]))}function fill(v){ids.forEach(id=>$(id).value=v[id]||'');$('words').dataset.edited='1';update()}
+function history(){let h=JSON.parse(localStorage.getItem('mvvm_receipts')||'[]');$('historyList').innerHTML='';if(!h.length){$('historyList').textContent='No saved receipts yet.';return}h.slice().reverse().forEach(v=>{let row=document.createElement('div');row.className='history-item';let label=document.createElement('span');label.textContent=(v.receiptNo||'No number')+' · '+(v.donor||'Unnamed donor');let btn=document.createElement('button');btn.className='secondary';btn.textContent='Load';btn.onclick=()=>fill(v);row.append(label,btn);$('historyList').append(row)})}
+$('saveBtn').onclick=()=>{let v=values();if(!v.receiptNo){alert('Please enter a receipt number.');return}let h=JSON.parse(localStorage.getItem('mvvm_receipts')||'[]').filter(x=>x.receiptNo!==v.receiptNo);h.push(v);localStorage.setItem('mvvm_receipts',JSON.stringify(h));history();alert('Receipt saved in this browser.')};
+$('newBtn').onclick=()=>{if(!confirm('Clear the form for a new receipt?'))return;ids.forEach(id=>$(id).value='');$('words').dataset.edited='';$('date').value=new Date().toISOString().slice(0,10);update()};
+$('clearHistory').onclick=()=>{if(confirm('Delete all saved receipt history from this browser?')){localStorage.removeItem('mvvm_receipts');history()}};$('date').value=new Date().toISOString().slice(0,10);update();history();
+</script>
+</body>
+</html>
